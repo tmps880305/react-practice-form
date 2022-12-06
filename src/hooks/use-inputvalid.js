@@ -1,45 +1,44 @@
-import {useState, useReducer} from 'react';
+import {useReducer} from 'react';
+
+const initialState = {value: '', isTouched: false};
 
 const inputReducer = (state, action) => {
     if (action.type === 'USER_INPUT') {
-        return {value: action.value, isValid: action.validateInput(action.value)}
+        return {value: action.value, isTouched: state.isTouched}
     }
     if (action.type === 'USER_BLUR') {
-        return {value: state.value, isValid: action.validateInput(state.value)}
+        return {value: state.value, isTouched: true}
     }
-    return {value: '', isValid: true};
+    if (action.type === 'USER_RESET') {
+        return initialState
+    }
+    return initialState;
 };
 
 
 const useInputvalid = (validateValue) => {
 
-    const [inputState, dispatchInput] = useReducer(inputReducer, {value: '', isValid: null});
-    // const [enteredValue, setEnteredValue] = useState('');
-    // const [isTouched, setIsTouched] = useState(false);
+    const [inputState, dispatchInput] = useReducer(inputReducer, initialState);
 
-    // const enterValueIsValid = validateValue(enteredValue);
-    // const inputIsInvalid = !enterValueIsValid && isTouched;
+    const enterValueIsValid = validateValue(inputState.value);
+    const hasError = !enterValueIsValid && inputState.isTouched;
 
     const inputChangeHandler = event => {
-        // setEnteredValue(event.target.value);
-        dispatchInput({type: 'USER_INPUT', value: event.target.value, validateInput: validateValue})
+        dispatchInput({type: 'USER_INPUT', value: event.target.value});
     };
 
     const inputBlurHandler = () => {
-        // setIsTouched(true);
-        dispatchInput({type: 'USER_BLUR', validateInput: validateValue})
+        dispatchInput({type: 'USER_BLUR'});
     };
 
     const resetInput = () => {
-        // setEnteredValue('');
-        // setIsTouched(false);
-        dispatchInput({});
+        dispatchInput({type: 'USER_RESET'});
     };
 
     return {
         value: inputState.value,
-        isValid: inputState.isValid === null ? true : inputState.isValid,
-        hasError: inputState.isValid === null ? false : !inputState.isValid,
+        isValid: enterValueIsValid,
+        hasError: hasError,
         inputChangeHandler,
         inputBlurHandler,
         resetInput
