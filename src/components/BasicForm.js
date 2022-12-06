@@ -6,7 +6,8 @@ const BasicForm = (props) => {
 
     const {
         value: enteredFirstName,
-        isInvalid: firstNameIsInvalid,
+        isValid: firstNameIsValid,
+        hasError: firstNameHasError,
         inputChangeHandler: firstNameChangeHandler,
         inputBlurHandler: firstNameBlurHandler,
         resetInput: resetFirstName
@@ -14,7 +15,8 @@ const BasicForm = (props) => {
 
     const {
         value: enteredLastName,
-        isInvalid: lastNameIsInvalid,
+        isValid: lastNameIsValid,
+        hasError: lastNameHasError,
         inputChangeHandler: lastNameChangeHandler,
         inputBlurHandler: lastNameBlurHandler,
         resetInput: resetLastName
@@ -22,7 +24,8 @@ const BasicForm = (props) => {
 
     const {
         value: enteredEmail,
-        isInvalid: emailIsInvalid,
+        isValid: emailIsValid,
+        hasError: emailHasError,
         inputChangeHandler: emailChangeHandler,
         inputBlurHandler: emailBlurHandler,
         resetInput: resetEmail
@@ -31,7 +34,7 @@ const BasicForm = (props) => {
 
     let formIsValid = false;
 
-    if (!firstNameIsInvalid && !lastNameIsInvalid && !emailIsInvalid) {
+    if (firstNameIsValid && lastNameIsValid && emailIsValid) {
         formIsValid = true;
     }
 
@@ -52,9 +55,9 @@ const BasicForm = (props) => {
     };
 
 
-    const firstNameInputClasses = firstNameIsInvalid ? 'form-control invalid' : 'form-control';
-    const lastNameInputClasses = lastNameIsInvalid ? 'form-control invalid' : 'form-control';
-    const emailInputClasses = emailIsInvalid ? 'form-control invalid' : 'form-control';
+    const firstNameInputClasses = firstNameHasError ? 'form-control invalid' : 'form-control';
+    const lastNameInputClasses = lastNameHasError ? 'form-control invalid' : 'form-control';
+    const emailInputClasses = emailHasError ? 'form-control invalid' : 'form-control';
 
     return (
         <form onSubmit={submitHandler}>
@@ -68,7 +71,7 @@ const BasicForm = (props) => {
                         onBlur={firstNameBlurHandler}
                         value={enteredFirstName}
                     />
-                    {firstNameIsInvalid && <p className='error-text'>Name must not be empty.</p>}
+                    {firstNameHasError && <p className='error-text'>Name must not be empty.</p>}
                 </div>
                 <div className={lastNameInputClasses}>
                     <label htmlFor='name'>Last Name</label>
@@ -79,7 +82,7 @@ const BasicForm = (props) => {
                         onBlur={lastNameBlurHandler}
                         value={enteredLastName}
                     />
-                    {lastNameIsInvalid && <p className='error-text'>Name must not be empty.</p>}
+                    {lastNameHasError && <p className='error-text'>Name must not be empty.</p>}
                 </div>
             </div>
             <div className={emailInputClasses}>
@@ -91,7 +94,7 @@ const BasicForm = (props) => {
                     onBlur={emailBlurHandler}
                     value={enteredEmail}
                 />
-                {emailIsInvalid && <p className='error-text'>Email format invalid.</p>}
+                {emailHasError && <p className='error-text'>Email format invalid.</p>}
             </div>
             <div className='form-actions'>
                 <button disabled={!formIsValid}>Submit</button>

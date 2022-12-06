@@ -6,7 +6,8 @@ const SimpleInput = (props) => {
 
     const {
         value: enteredName,
-        isInvalid: nameIsInvalid,
+        isInvalid: nameIsValid,
+        hasError: nameHasError,
         inputChangeHandler: nameChangeHandler,
         inputBlurHandler: nameBlurHandler,
         resetInput: resetName
@@ -14,7 +15,8 @@ const SimpleInput = (props) => {
 
     const {
         value: enteredEmail,
-        isInvalid: emailIsInvalid,
+        isInvalid: emailIsValid,
+        hasError: emailHasError,
         inputChangeHandler: emailChangeHandler,
         inputBlurHandler: emailBlurHandler,
         resetInput: resetEmail
@@ -23,7 +25,7 @@ const SimpleInput = (props) => {
 
     let formIsValid = false;
 
-    if (!nameIsInvalid && !emailIsInvalid) {
+    if (nameIsValid && emailIsValid) {
         formIsValid = true;
     }
 
@@ -31,7 +33,7 @@ const SimpleInput = (props) => {
     const submitHandler = event => {
         event.preventDefault();
 
-        if (nameIsInvalid && emailIsInvalid) {
+        if (!nameIsValid && !emailIsValid) {
             return;
         }
 
@@ -43,8 +45,8 @@ const SimpleInput = (props) => {
     };
 
 
-    const nameInputClasses = nameIsInvalid ? 'form-control invalid' : 'form-control';
-    const emailInputClasses = emailIsInvalid ? 'form-control invalid' : 'form-control';
+    const nameInputClasses = nameHasError ? 'form-control invalid' : 'form-control';
+    const emailInputClasses = emailHasError ? 'form-control invalid' : 'form-control';
 
     return (
         <form onSubmit={submitHandler}>
@@ -57,7 +59,7 @@ const SimpleInput = (props) => {
                     onBlur={nameBlurHandler}
                     value={enteredName}
                 />
-                {nameIsInvalid && <p className='error-text'>Name must not be empty.</p>}
+                {nameHasError && <p className='error-text'>Name must not be empty.</p>}
 
             </div>
             <div className={emailInputClasses}>
@@ -69,7 +71,7 @@ const SimpleInput = (props) => {
                     onBlur={emailBlurHandler}
                     value={enteredEmail}
                 />
-                {emailIsInvalid && <p className='error-text'>Email format invalid.</p>}
+                {emailHasError && <p className='error-text'>Email format invalid.</p>}
 
             </div>
             <div className="form-actions">
